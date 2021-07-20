@@ -127,3 +127,17 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+#files to ignore  
+/Code/Batch Loading/Histograms/*
+/Code/Batch Loading/Histories/*
+/Code/Batch Loading/Loss Curves/*
+/Code/Batch Loading/Models/*
+/Code/Batch Loading/Plots/*
+/Code/Batch Loading/Currently used/labels/*
+/Code/Batch Loading/Currently used/lenses/*
+/Code/Batch Loading/Currently used/job_outputs/*
+/Code/Batch Loading/Currently used/wandb/*
+
+#.out files
+.out
