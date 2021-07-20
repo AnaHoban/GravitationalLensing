@@ -138,6 +138,6 @@ dmypy.json
 /Code/Batch Loading/Currently used/lenses/*
 /Code/Batch Loading/Currently used/job_outputs/*
 /Code/Batch Loading/Currently used/wandb/*
-
+/Class/*
 #.out files
 .out
