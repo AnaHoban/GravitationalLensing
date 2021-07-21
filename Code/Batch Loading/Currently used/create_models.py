@@ -61,9 +61,9 @@ def create_classifier(encoder, output_bias = None):
     model.add(keras.layers.Flatten())
     
     #model.add(keras.layers.Dense(128))
-    #model.add(keras.layers.Dense(64))
+    model.add(keras.layers.Dense(64))
     #model.add(keras.layers.Dense(1000,kernel_initializer=tf.keras.initializers.RandomNormal(seed=42)))
-    #model.add(keras.layers.Dense(32))
+    model.add(keras.layers.Dense(32))
     #model.add(keras.layers.Dense(32))
     if output_bias is not None:
         model.add(keras.layers.Dense(1, activation="sigmoid",bias_initializer=keras.initializers.Constant(output_bias))) 
