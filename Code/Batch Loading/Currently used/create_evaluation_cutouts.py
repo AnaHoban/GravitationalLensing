@@ -20,7 +20,7 @@ from astropy.wcs import WCS,utils
 def create_cutout(img, x, y):
     ''' Creates the image and weight cutouts given a tile, the position of the center and the band '''
     
-    img_cutout = Cutout2D(img.data, (x, y), cutout_size, mode="partial", fill_value=0).data
+    img_cutout = Cutout2D(img.data, (x.values[0], y.values[0]), cutout_size, mode="partial", fill_value=0).data
     
     if np.count_nonzero(np.isnan(img_cutout)) >= 0.05*cutout_size**2 or np.count_nonzero(img_cutout) == 0: # Don't use this cutout
         return (np.zeros(cutout_size,cutout_size))
@@ -40,10 +40,6 @@ def create_cutout(img, x, y):
         #inorms.append(1/(img_upper - img_lower))
         
     return img_norm
-           
-print('starting cutout creation')
-#batch them
-batch_size = 256
 
 def make_hf(hf):
     #for every tile
@@ -71,8 +67,6 @@ def make_hf(hf):
             cut[...,1] = create_cutout(r_image[0], x, y)           
             cut[0,0,2] = int(cutout[1:]) #tracking
 
-            print('made cut '+ cutout)
-
             hf.create_dataset(f"{cutout}", data=cut)
         u_image.close()
         r_image.close()
@@ -84,7 +78,7 @@ def make_hf(hf):
 
 #sizeS
 cutout_size = 64
-nb_cutouts = 10
+nb_cutouts = 100000
 
 #directories
 scratch = os.path.expandvars("$SCRATCH") + '/'
@@ -136,7 +130,6 @@ for tile_id in available_tiles: #single and both channels
 
         count += 1
         nb += 1
-        print(nb)
         if nb == nb_cutouts:
             break
     if nb == nb_cutouts:
@@ -160,7 +153,7 @@ fixed = available_tiles[:len(need_fix)]
 fix_dict = {j: fixed[i] for i,j in enumerate(need_fix)}
 master_catalogue['TILE'] = master_catalogue['TILE'].replace(fix_dict)
 
-
+print('starting cutout creation')
 #creating and storing the cutouts    
 hf_file_name = 'class_cuts.h5'
 hf = h5py.File(scratch + hf_file_name, "w")
