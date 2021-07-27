@@ -17,13 +17,13 @@ import umap.umap_ as umap
 import seaborn as sns
 
 
-scratch = os.path.expandvars('$SCRATCH') + /
+scratch = os.path.expandvars('$SCRATCH') + '/'
 
 ####### 1 ####### this will be part of the script
 #Input
 #getting cutouts
 file_directory = scratch + 'class_dataset'
-cutouts = tf.data.Dataset.experimental.load(file_directory, element_spec = tf.TensorSpec(shape=(64,64,1), dtype=tf.float64))
+cutouts = tf.data.experimental.load(file_directory, element_spec = tf.TensorSpec(shape=(1,64,64,4), dtype=tf.float64))
 
 ####### 2 ######
 #classification
@@ -37,11 +37,8 @@ predict_labels = classifier.predict(cutouts)
 ###### 3 ######
 #stats
 plt.hist(predict_labels)
-plt.title('Histogram of predicted labels on 5000 cutouts #' + str(n)) #*** add batch number 
-plt.save(scratch + 'Classification/' + 'hist_' + str(n))
-
-
-
+plt.title('Histogram of predicted labels on all cutouts') #*** add batch number 
+plt.savefig('../Classification/' + 'hist')
 ###### 4 ######
 #lenses
 lenses = cutouts[y_pred > 0.5]
@@ -57,7 +54,7 @@ for i, score in enumerate(lens_score):
 
     f.suptitle('score: ' + str(i))
 
-    plt.savefig(scratch + 'Classification/Lenses/' + str()) #*** need to find a way to keep track of tile and location, dictionnary?
+    plt.savefig('../Classification/Lenses/' + str(lenses[i,0,0,2]))
 
 
 
@@ -70,3 +67,5 @@ mapper = reducer.fit(test_x.reshape(len(cutouts),64*64*1))
 embedding = reducer.transform(test_x.reshape(len(cutouts),64*64*4))
 
 plt.scatter(embedding[:,0], embedding[:,1], c = pred_label)
+plt.legend()
+plt.savefig('../Classification/Lenses/umap_classification')
