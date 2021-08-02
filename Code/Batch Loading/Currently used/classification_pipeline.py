@@ -27,7 +27,7 @@ cutouts = tf.data.experimental.load(file_directory, element_spec = tf.TensorSpec
 
 ####### 2 ######
 #classification
-classifier = keras.models.load_model("../Models/binary_classifier")
+classifier = keras.models.load_model("../Models/binary_classifier_equalsets")
 for i in range(len(classifier.layers)):
     classifier.layers[i].trainable = False
 
@@ -41,7 +41,7 @@ plt.title('Histogram of predicted labels on all cutouts') #*** add batch number
 plt.savefig('../Classification/' + 'hist')
 ###### 4 ######
 #lenses
-lenses_indices, lens_score =  np.where(predict_labels > 1e-5)
+lenses_indices, lens_score =  np.where(predict_labels > 0.5)
 
 print(f"found {len(lenses_indices)} lenses")
 
@@ -67,7 +67,7 @@ for i, score in enumerate(lens_score):
 
     f.suptitle('score: ' + str(score))
 
-    plt.savefig(f'../Classification/Lenses/lens_{int(all_found_lenses[i,0,0,2])}')
+    #plt.savefig(f'../Classification/Lenses/lens_{int(all_found_lenses[i,0,0,2])}')
 
 
 ####### 5 #######

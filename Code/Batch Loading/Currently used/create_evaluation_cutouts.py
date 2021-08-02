@@ -23,7 +23,7 @@ def create_cutout(img, x, y):
     img_cutout = Cutout2D(img.data, (x.values[0], y.values[0]), cutout_size, mode="partial", fill_value=0).data
     
     if np.count_nonzero(np.isnan(img_cutout)) >= 0.05*cutout_size**2 or np.count_nonzero(img_cutout) == 0: # Don't use this cutout
-        return (np.zeros(cutout_size,cutout_size))
+        return np.zeros((cutout_size,cutout_size))
     
     img_cutout[np.isnan(img_cutout)] = 0
     
@@ -57,17 +57,23 @@ def make_hf(hf):
         r_image = fits.open(tmp_dir + r_name, memmap=True)   
         
         #for every cutout in a tile
-        for cutout in master_catalogue[master_catalogue['TILE'] == tile_id]['NB']:
+        for cutout in master_catalogue[master_catalogue['TILE'] == tile_id]['CUTOUT']:
             cut = np.zeros((cutout_size, cutout_size, 4))
 
-            x = master_catalogue[master_catalogue['NB'] == cutout]['X_IMAGE']
-            y = master_catalogue[master_catalogue['NB'] == cutout]['Y_IMAGE']
+            x = master_catalogue[master_catalogue['CUTOUT'] == cutout]['X_IMAGE']
+            y = master_catalogue[master_catalogue['CUTOUT'] == cutout]['Y_IMAGE']
 
             cut[...,0] = create_cutout(u_image[0], x, y)
             cut[...,1] = create_cutout(r_image[0], x, y)           
             cut[0,0,2] = int(cutout[1:]) #tracking
-
+            print(cutout)
             hf.create_dataset(f"{cutout}", data=cut)
+            
+            if int(cutout[1:]) > nb_max:
+                break
+            
+        if int(cutout[1:]) > nb_max:
+            break
         u_image.close()
         r_image.close()
     hf.close()
@@ -76,9 +82,9 @@ def make_hf(hf):
 #########################################################
 
 
-#sizeS
+#sizes
 cutout_size = 64
-nb_cutouts = 100000
+nb_max = 500000
 
 #directories
 scratch = os.path.expandvars("$SCRATCH") + '/'
@@ -101,52 +107,15 @@ for tile in unused_tiles:
     u_tile = 'CFIS.' + tile + '.u.fits'
     if u_tile in all_tiles and r_tile in all_tiles: #taking cutouts with u and r bands
         available_tiles.append(tile)
-ex_cat = image_dir + 'CFIS.' + available_tiles[0] + '.u.cat'
-example = Table.read(ex_cat, format="ascii.sextractor")
-keys = example.keys()
-master_catalogue = pd.DataFrame(index = [0], columns = keys + ['TILE'] + ['BAND'] + ['CUTOUT'] + ['NB'])
 
-print('master cat created \n')
-#populate master cat
 
-nb = 0
-
-for tile_id in available_tiles: #single and both channels
-
-    rcat = Table.read(image_dir + 'CFIS.'+ tile_id + '.r' + ".cat", format="ascii.sextractor")
-    count = 0
-    for i in range(len(rcat)): #each cutout in tile
-        if rcat["FLAGS"][i] != 0 or rcat["MAG_AUTO"][i] >= 99.0 or rcat["MAGERR_AUTO"][i] <= 0 or rcat["MAGERR_AUTO"][i] >= 1:
-            continue
-
-        #keep track
-        new_cutout = pd.DataFrame(index = [i], data=np.array(rcat[i]), columns = keys + ['TILE'] + ['BAND'] + ['CUTOUT'] + ['NB'])
-        new_cutout['BAND'] = 'r'
-        new_cutout['TILE'] = tile_id
-        new_cutout['CUTOUT'] = f"{count}"
-        new_cutout['NB'] = f"c{nb}"
-
-        master_catalogue = master_catalogue.append(new_cutout)
-
-        count += 1
-        nb += 1
-        if nb == nb_cutouts:
-            break
-    if nb == nb_cutouts:
-        break
-            
-print('master cat filled')   
-
-#save
-master_catalogue[1:].to_csv(scratch + 'classify_catalogue.csv') 
-
-#if already computed
-#master_catalogue = pd.read_csv(scratch + 'classify_catalogue.csv') 
-#if just computed
-master_catalogue = master_catalogue[1:]
+#Loading mastercat
+print('loading mastercat')
+master_catalogue = pd.read_csv(scratch + 'classify_catalogue.csv')[1:]
 
 
 #fix tiles
+print('fixing tiles strings')
 need_fix = list(master_catalogue['TILE'].unique())
 fixed = available_tiles[:len(need_fix)]
 
@@ -156,6 +125,7 @@ master_catalogue['TILE'] = master_catalogue['TILE'].replace(fix_dict)
 print('starting cutout creation')
 #creating and storing the cutouts    
 hf_file_name = 'class_cuts.h5'
+os.remove(scratch + hf_file_name)
 hf = h5py.File(scratch + hf_file_name, "w")
 make_hf(hf)
 
@@ -164,7 +134,7 @@ hf = h5py.File(scratch + hf_file_name, "r")
 
 gen = lambda: (tf.expand_dims(hf.get(key), axis=0) for key in hf.keys())
 
-
+print('starting dataset creation')
 dataset = tf.data.Dataset.from_generator(gen, output_types=(tf.float64))
 
 #save dataset
