@@ -140,6 +140,7 @@ dmypy.json
 /Code/Batch Loading/Currently used/wandb/*
 /Code/Batch Loading/Class/*
 /Code/Batch Loading/Classification/*
+/Code/Batch Loading/outputs/*
 .out
 #.out files
 .out
