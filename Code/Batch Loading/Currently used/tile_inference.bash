@@ -44,8 +44,8 @@ function infer_one_tile() {
 
 tile_list=($(<all_files.list))
 
-# set the number of tiles that each SLURM task should do
-per_task=1000
+# set the number of tiles that each SLURM task should do (43 031 tiles in total)
+per_task=431
 
 # starting and ending indices for this task
 # based on the SLURM task and the number of tiles per task.
