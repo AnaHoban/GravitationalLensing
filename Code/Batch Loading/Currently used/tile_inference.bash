@@ -11,21 +11,32 @@
 # a small function that will call your python script to run on one tile
 function infer_one_tile() {
     local tile=$1
-
-    # where to download each tile
-    local workdir=${SLURM_TMPDIR}/${tile}
-    mkdir -p ${workdir}
+    local bands_code = $2
 
     echo "downloading ${tile} files on host $(hostname)"
     date
-
+    
+    # where to download each tile
+    local workdir=${SLURM_TMPDIR}/${tile}
+    mkdir -p ${workdir}
+    
+    if [[$#bands == 1 ]] || [[$#bands == 3 ]]; then
+        vcp -v vos:cfis/tiles_DR3/${tile}.u.fits ${workdir}/
+        vcp -v vos:cfis/tiles_DR3/${tile}.u.cat ${workdir}/
+    else if [[$#bands == 2]] || [[$#bands == 3 ]]; then
+        vcp -v vos:cfis/tiles_DR3/${tile}.r.fits ${workdir}/
+        vcp -v vos:cfis/tiles_DR3/${tile}.r.cat ${workdir}/
+    fi
+    #things to check:
+#      [[]] in if statements
+#      if tile.band.fits works in this case
+#      the == or -eq
+    
+    
     # PanSTARRS tiles (you may ignore this for now)
     #if [[ ${tile} =~ PS1 ]]; then
     #    vcp -L -v vos:cfis/ps_tiles/${tile}* ${workdir}/
     # CFIS tiles
-    vcp -v vos:cfis/tiles_DR3/${tile}* ${workdir}/
-    ls ${workdir}
-    #fi
 
     echo "performing inference on ${tile}"
     date
@@ -57,7 +68,8 @@ source $HOME/umap/bin/activate
 
 
 # create an array of all the tiles
-tile_list=($(<tile.list))
+tile_list=($(<all_files.list))
+
 
 # set the number of tiles that each SLURM task should do
 per_task=1000
@@ -67,10 +79,21 @@ per_task=1000
 start_index=$(( (${SLURM_ARRAY_TASK_ID} - 1) * ${per_task} + 1 ))
 end_index=$(( ${SLURM_ARRAY_TASK_ID} * ${per_task} ))
 
-echo "This is task ${SLURM_ARRAY_TASK_ID}, which will do tiles ${tile_list[${start_index}]} to ${tile_list[${end_index}]}"
+
+echo "This is task ${SLURM_ARRAY_TASK_ID}, which will do tiles ${tile_list[${start_index_unique}]} to ${tile_list[${end_index_unique}]}"
 
 for (( idx=${start_index}; idx<=${end_index}; idx++ )); do
     tile=${tile_list[${idx}]}
+    next_tile=${tile_list[${idx}]}
     echo "This is SLURM task ${SLURM_ARRAY_TASK_ID} for tile ${tile}"
-    infer_one_tile ${tile}
+    bands = 1 #default --just u
+
+    if [[${tile} == ${next_tile}]]; then
+        bands = 3 #we have both bands
+        idx ++ #skip the next
+    elif [[${tile}[-1] == 'r']]; then
+         bands = 2
+    fi
+    
+    infer_one_tile ${tile} ${bands_nb}
 done
