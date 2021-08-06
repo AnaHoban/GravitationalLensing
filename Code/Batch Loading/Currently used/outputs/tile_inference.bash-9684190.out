@@ -1,0 +1,20 @@
+This is task 36, which will do tiles CFIS.443.245.r to CFIS.469.241.u
+This is SLURM task 36 for tile CFIS.443.245
+3 band code
+downloading CFIS.443.245 files on host cdr650.int.cedar.computecanada.ca
+Fri Aug  6 12:41:19 PDT 2021
+INFO vcp vos:cfis/tiles_DR3/CFIS.443.245.u.fits -> /localscratch/anahoban.9684190.0/CFIS.443.245/CFIS.443.245.u.fits 
+INFO vcp vos:cfis/tiles_DR3/CFIS.443.245.u.cat -> /localscratch/anahoban.9684190.0/CFIS.443.245/CFIS.443.245.u.cat 
+INFO vcp vos:cfis/tiles_DR3/CFIS.443.245.r.fits -> /localscratch/anahoban.9684190.0/CFIS.443.245/CFIS.443.245.r.fits 
+INFO vcp vos:cfis/tiles_DR3/CFIS.443.245.r.cat -> /localscratch/anahoban.9684190.0/CFIS.443.245/CFIS.443.245.r.cat 
+performing inference on CFIS.443.245
+Fri Aug  6 12:42:10 PDT 2021
+2021-08-06 12:42:14.298810: I tensorflow/stream_executor/platform/default/dso_loader.cc:48] Successfully opened dynamic library libcudart.so.10.1
+2021-08-06 12:42:37.270944: W tensorflow/stream_executor/platform/default/dso_loader.cc:59] Could not load dynamic library 'libcuda.so.1'; dlerror: libcuda.so.1: cannot open shared object file: No such file or directory
+2021-08-06 12:42:37.271133: W tensorflow/stream_executor/cuda/cuda_driver.cc:312] failed call to cuInit: UNKNOWN ERROR (303)
+2021-08-06 12:42:37.271262: I tensorflow/stream_executor/cuda/cuda_diagnostics.cc:156] kernel driver does not appear to be running on this host (cdr650.int.cedar.computecanada.ca): /proc/driver/nvidia/version does not exist
+2021-08-06 12:42:37.271902: I tensorflow/core/platform/cpu_feature_guard.cc:142] This TensorFlow binary is optimized with oneAPI Deep Neural Network Library (oneDNN)to use the following CPU instructions in performance-critical operations:  AVX2 FMA
+To enable them in other operations, rebuild TensorFlow with the appropriate compiler flags.
+2021-08-06 12:42:37.282148: I tensorflow/core/platform/profile_utils/cpu_utils.cc:104] CPU Frequency: 2095190000 Hz
+2021-08-06 12:42:37.282527: I tensorflow/compiler/xla/service/service.cc:168] XLA service 0x73a78f0 initialized for platform Host (this does not guarantee that XLA will be used). Devices:
+2021-08-06 12:42:37.282639: I tensorflow/compiler/xla/service/service.cc:176]   StreamExecutor device (0): Host, Default Version

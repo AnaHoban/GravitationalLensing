@@ -8,10 +8,13 @@
 #SBATCH --mem=8000M
 #SBATCH --output=outputs/%x-%j.out
 
+
+source $HOME/umap/bin/activate
+
 # a small function that will call your python script to run on one tile
 function infer_one_tile() {
     local tile=$1
-    local bands_code = $2
+    local bands_nb=$2
 
     echo "downloading ${tile} files on host $(hostname)"
     date
@@ -20,80 +23,64 @@ function infer_one_tile() {
     local workdir=${SLURM_TMPDIR}/${tile}
     mkdir -p ${workdir}
     
-    if [[$#bands == 1 ]] || [[$#bands == 3 ]]; then
+    if [[ ${bands_nb} -eq 1 ]] || [[ ${bands_nb} -eq 3 ]]; then
         vcp -v vos:cfis/tiles_DR3/${tile}.u.fits ${workdir}/
         vcp -v vos:cfis/tiles_DR3/${tile}.u.cat ${workdir}/
-    else if [[$#bands == 2]] || [[$#bands == 3 ]]; then
+    fi
+    if [[ ${bands_nb} -eq 2 ]] || [[ ${bands_nb} -eq 3 ]]; then
         vcp -v vos:cfis/tiles_DR3/${tile}.r.fits ${workdir}/
         vcp -v vos:cfis/tiles_DR3/${tile}.r.cat ${workdir}/
     fi
-    #things to check:
-#      [[]] in if statements
-#      if tile.band.fits works in this case
-#      the == or -eq
-    
-    
-    # PanSTARRS tiles (you may ignore this for now)
-    #if [[ ${tile} =~ PS1 ]]; then
-    #    vcp -L -v vos:cfis/ps_tiles/${tile}* ${workdir}/
-    # CFIS tiles
 
     echo "performing inference on ${tile}"
     date
 
-    python inference_pipeline.py ${tile}
-
-    #echo "saving outputs"
-    #cp ${workdir} ${SCRATCH}/my_output.csv
+    python inference_pipeline.py ${tile} ${workdir}
 
     # cleanup, ready for next tile
-    rm -fv ${workdir}
+    rm -rf ${workdir}
 }
 
 
-source $HOME/umap/bin/activate
-
-# create a file 'tile.list' with list of all available tiles:
-# 0. Get a certificate:
-
-#   cadc-get-cert -u AnaHoban
-
-# 1. List all files in the tiles_DR3 directory
-
-#   vls vos:cfis/tiles_DR3 > tiles_DR3.vls
-
-# 2. From the list of all files, create a file tile.list with unique tile names
-
-#   cat tiles_DR3.vls | sed -e 's|\(CFIS........\).*|\1|g' | sort | uniq > tile.list
-
-
-# create an array of all the tiles
 tile_list=($(<all_files.list))
-
 
 # set the number of tiles that each SLURM task should do
 per_task=1000
 
 # starting and ending indices for this task
 # based on the SLURM task and the number of tiles per task.
-start_index=$(( (${SLURM_ARRAY_TASK_ID} - 1) * ${per_task} + 1 ))
+start_index=$(( (${SLURM_ARRAY_TASK_ID} - 1 ) * ${per_task} + 1 ))
 end_index=$(( ${SLURM_ARRAY_TASK_ID} * ${per_task} ))
 
+echo "This is task ${SLURM_ARRAY_TASK_ID}, which will do tiles ${tile_list[${start_index}]} to ${tile_list[${end_index}]}"
 
-echo "This is task ${SLURM_ARRAY_TASK_ID}, which will do tiles ${tile_list[${start_index_unique}]} to ${tile_list[${end_index_unique}]}"
+idx=${start_index}
 
-for (( idx=${start_index}; idx<=${end_index}; idx++ )); do
-    tile=${tile_list[${idx}]}
-    next_tile=${tile_list[${idx}]}
-    echo "This is SLURM task ${SLURM_ARRAY_TASK_ID} for tile ${tile}"
-    bands = 1 #default --just u
-
-    if [[${tile} == ${next_tile}]]; then
-        bands = 3 #we have both bands
-        idx ++ #skip the next
-    elif [[${tile}[-1] == 'r']]; then
-         bands = 2
-    fi
+while (( ${idx} <= ${end_index} )); do
     
-    infer_one_tile ${tile} ${bands_nb}
+    tile=${tile_list[${idx}]}
+    next_tile=${tile_list[${idx}+1]}
+    
+    if ((${idx}+1 > ${end_index})); then
+        next_tile=1 #no match
+    fi    
+    
+    echo "This is SLURM task ${SLURM_ARRAY_TASK_ID} for tile ${tile[@]/${tile: -2}}"
+    
+    bands=1 #default --just u
+  
+    #checking if the next tile has the same tile ID
+    if [[ ${tile[@]/${tile: -1}} == ${next_tile[@]/${next_tile: -1}} ]]; then
+    
+        bands=3 #we have both bands
+        idx=$((${idx}+1)) #skip the next tile name 
+        
+    elif [[ ${tile: -1} == 'r' ]]; then
+         bands=2
+    fi    
+    
+    echo "${bands} band code"
+    infer_one_tile ${tile[@]/${tile: -2}} ${bands}
+    
+    idx=$((${idx}+1)) 
 done

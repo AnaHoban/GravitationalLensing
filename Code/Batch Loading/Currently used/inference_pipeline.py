@@ -56,7 +56,7 @@ def create_cutout(img, x, y, classifier_model = classifier):
     return img_norm
 
 
-def classify(cat, u_image= None, r_image = None):
+def classify(cat, cat_name, u_image= None, r_image = None):
     #go through each cutout and classify them
     for i in range(len(cat)): #each cutout in tile
         if cat["FLAGS"][i] != 0 or cat["MAG_AUTO"][i] >= 99.0 or cat["MAGERR_AUTO"][i] <= 0 or cat["MAGERR_AUTO"][i] >= 1:
@@ -72,9 +72,8 @@ def classify(cat, u_image= None, r_image = None):
         if r_image != None:
             cut[...,1] =  create_cutout(r_image, x, y)
 
-        if cut.shape == (1, 64,64,4):
+        if cut.shape == (1,64,64,4):
             cut_pred = classifier.predict(cut)
-
             #add to catalogue
             cat[i]['pred'] = cut_pred
         else:
@@ -93,9 +92,11 @@ def classify(cat, u_image= None, r_image = None):
             plt.savefig(scratch + f'Lenses/lens_{tile_id}_{i}')
 
     cat.write(scratch + 'catalogues/' + cat_name , format='pandas.csv')    
-
-    u_image.close()
-    r_image.close()
+    
+    if u_image != None:
+        u_image.close()
+    if r_image != None:
+        r_image.close()
 
     print(f'tile {tile_id} done')
 #############################################################
@@ -110,11 +111,9 @@ tmp_dir = os.path.expandvars("$SLURM_TMPDIR") + '/'
 files_dir = sys.argv[2] #tmp_dir + tile + '/'
 
 
-tile_id = tile[:4] #get only the XXX.XXX id (by cropping CFIS.)
+tile_id = tile[5:] #get only the XXX.XXX id (by cropping CFIS.)
 
 #file names
-print('dir:', os.listdir(files_dir))
-
 rcat_name = 'CFIS.'+ tile_id + '.r' + ".cat"
 ucat_name = 'CFIS.'+ tile_id + '.u' + ".cat"
 
@@ -124,28 +123,28 @@ r_name =  'CFIS.'+ tile_id + '.r' + ".fits"
 u_tile = None
 r_tile = None
 
-
 #go through tiles
 available_files = os.listdir(files_dir)
+print(available_files)
 
 if rcat_name in available_files:
-    cat = Table.read(files_dir+ rcat_name, format="ascii.sextractor")
-    r_tile = fits.open(files_dir + r_name, memmap=True) 
+    cat = Table.read(files_dir + '/' + rcat_name, format="ascii.sextractor")
+    r_tile = fits.open(files_dir + '/' + r_name, memmap=True) 
+    cat_name = rcat_name
     
     if u_name in available_files:
-        u_tile = fits.open(files_dir + u_name, memmap=True)
+        u_tile = fits.open(files_dir + '/' + u_name, memmap=True)
     
 
-elif ucat_name in  available_files:
-    cat = Table.read(files_dir + ucat_name, format="ascii.sextractor")
-    u_tile = fits.open(files_dir + u_name, memmap=True)
-
+elif ucat_name in available_files:
+    cat = Table.read(files_dir + '/' + ucat_name, format="ascii.sextractor")
+    u_tile = fits.open(files_dir + '/' + u_name, memmap=True)
+    cat_name = ucat_name
     
 #initialize classification column
-cat['pred'] = 2 
+cat['pred'] = 2.0 
 
-
-classify(cat=cat, u_image= u_tile, r_image = r_tile)
+classify(cat=cat, cat_name = cat_name, u_image= u_tile, r_image = r_tile)
 
 
 

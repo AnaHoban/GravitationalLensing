@@ -1,0 +1,71 @@
+This is task 65, which will do tiles  to 
+This is SLURM task 65 for tile 
+3 band code
+downloading 3 files on host cdr568.int.cedar.computecanada.ca
+Fri Aug  6 12:41:31 PDT 2021
+performing inference on 3
+Fri Aug  6 12:41:31 PDT 2021
+2021-08-06 12:41:34.691874: I tensorflow/stream_executor/platform/default/dso_loader.cc:48] Successfully opened dynamic library libcudart.so.10.1
+2021-08-06 12:42:00.317737: W tensorflow/stream_executor/platform/default/dso_loader.cc:59] Could not load dynamic library 'libcuda.so.1'; dlerror: libcuda.so.1: cannot open shared object file: No such file or directory
+2021-08-06 12:42:00.321179: W tensorflow/stream_executor/cuda/cuda_driver.cc:312] failed call to cuInit: UNKNOWN ERROR (303)
+2021-08-06 12:42:00.323384: I tensorflow/stream_executor/cuda/cuda_diagnostics.cc:156] kernel driver does not appear to be running on this host (cdr568.int.cedar.computecanada.ca): /proc/driver/nvidia/version does not exist
+2021-08-06 12:42:00.324054: I tensorflow/core/platform/cpu_feature_guard.cc:142] This TensorFlow binary is optimized with oneAPI Deep Neural Network Library (oneDNN)to use the following CPU instructions in performance-critical operations:  AVX2 FMA
+To enable them in other operations, rebuild TensorFlow with the appropriate compiler flags.
+2021-08-06 12:42:00.351848: I tensorflow/core/platform/profile_utils/cpu_utils.cc:104] CPU Frequency: 2095054999 Hz
+2021-08-06 12:42:00.354020: I tensorflow/compiler/xla/service/service.cc:168] XLA service 0x73207f0 initialized for platform Host (this does not guarantee that XLA will be used). Devices:
+2021-08-06 12:42:00.354181: I tensorflow/compiler/xla/service/service.cc:176]   StreamExecutor device (0): Host, Default Version
+read in  3
+[]
+Traceback (most recent call last):
+  File "inference_pipeline.py", line 145, in <module>
+    cat['pred'] = 2.0 
+NameError: name 'cat' is not defined
+This is SLURM task 65 for tile 
+3 band code
+downloading 3 files on host cdr568.int.cedar.computecanada.ca
+Fri Aug  6 12:42:03 PDT 2021
+performing inference on 3
+Fri Aug  6 12:42:03 PDT 2021
+2021-08-06 12:42:07.674270: I tensorflow/stream_executor/platform/default/dso_loader.cc:48] Successfully opened dynamic library libcudart.so.10.1
+2021-08-06 12:42:32.959586: W tensorflow/stream_executor/platform/default/dso_loader.cc:59] Could not load dynamic library 'libcuda.so.1'; dlerror: libcuda.so.1: cannot open shared object file: No such file or directory
+2021-08-06 12:42:32.959706: W tensorflow/stream_executor/cuda/cuda_driver.cc:312] failed call to cuInit: UNKNOWN ERROR (303)
+2021-08-06 12:42:32.959791: I tensorflow/stream_executor/cuda/cuda_diagnostics.cc:156] kernel driver does not appear to be running on this host (cdr568.int.cedar.computecanada.ca): /proc/driver/nvidia/version does not exist
+2021-08-06 12:42:32.960420: I tensorflow/core/platform/cpu_feature_guard.cc:142] This TensorFlow binary is optimized with oneAPI Deep Neural Network Library (oneDNN)to use the following CPU instructions in performance-critical operations:  AVX2 FMA
+To enable them in other operations, rebuild TensorFlow with the appropriate compiler flags.
+2021-08-06 12:42:32.970977: I tensorflow/core/platform/profile_utils/cpu_utils.cc:104] CPU Frequency: 2095054999 Hz
+2021-08-06 12:42:32.971293: I tensorflow/compiler/xla/service/service.cc:168] XLA service 0x753a830 initialized for platform Host (this does not guarantee that XLA will be used). Devices:
+2021-08-06 12:42:32.971372: I tensorflow/compiler/xla/service/service.cc:176]   StreamExecutor device (0): Host, Default Version
+read in  3
+[]
+Traceback (most recent call last):
+  File "inference_pipeline.py", line 145, in <module>
+    cat['pred'] = 2.0 
+NameError: name 'cat' is not defined
+This is SLURM task 65 for tile 
+3 band code
+downloading 3 files on host cdr568.int.cedar.computecanada.ca
+Fri Aug  6 12:42:35 PDT 2021
+performing inference on 3
+Fri Aug  6 12:42:35 PDT 2021
+2021-08-06 12:42:39.979549: I tensorflow/stream_executor/platform/default/dso_loader.cc:48] Successfully opened dynamic library libcudart.so.10.1
+2021-08-06 12:43:04.674510: W tensorflow/stream_executor/platform/default/dso_loader.cc:59] Could not load dynamic library 'libcuda.so.1'; dlerror: libcuda.so.1: cannot open shared object file: No such file or directory
+2021-08-06 12:43:04.674700: W tensorflow/stream_executor/cuda/cuda_driver.cc:312] failed call to cuInit: UNKNOWN ERROR (303)
+2021-08-06 12:43:04.674821: I tensorflow/stream_executor/cuda/cuda_diagnostics.cc:156] kernel driver does not appear to be running on this host (cdr568.int.cedar.computecanada.ca): /proc/driver/nvidia/version does not exist
+2021-08-06 12:43:04.676015: I tensorflow/core/platform/cpu_feature_guard.cc:142] This TensorFlow binary is optimized with oneAPI Deep Neural Network Library (oneDNN)to use the following CPU instructions in performance-critical operations:  AVX2 FMA
+To enable them in other operations, rebuild TensorFlow with the appropriate compiler flags.
+2021-08-06 12:43:04.686696: I tensorflow/core/platform/profile_utils/cpu_utils.cc:104] CPU Frequency: 2095054999 Hz
+2021-08-06 12:43:04.687023: I tensorflow/compiler/xla/service/service.cc:168] XLA service 0x8222260 initialized for platform Host (this does not guarantee that XLA will be used). Devices:
+2021-08-06 12:43:04.687110: I tensorflow/compiler/xla/service/service.cc:176]   StreamExecutor device (0): Host, Default Version
+read in  3
+[]
+Traceback (most recent call last):
+  File "inference_pipeline.py", line 145, in <module>
+    cat['pred'] = 2.0 
+NameError: name 'cat' is not defined
+This is SLURM task 65 for tile 
+3 band code
+downloading 3 files on host cdr568.int.cedar.computecanada.ca
+Fri Aug  6 12:43:07 PDT 2021
+performing inference on 3
+Fri Aug  6 12:43:07 PDT 2021
+2021-08-06 12:43:12.409629: I tensorflow/stream_executor/platform/default/dso_loader.cc:48] Successfully opened dynamic library libcudart.so.10.1

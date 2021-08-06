@@ -1,0 +1,18 @@
+This is task 11, which will do tiles CFIS.183.254.u to CFIS.195.280.r
+This is SLURM task 11 for tile CFIS.183.254
+1 band code
+downloading CFIS.183.254 files on host cdr582.int.cedar.computecanada.ca
+Fri Aug  6 12:41:19 PDT 2021
+INFO vcp vos:cfis/tiles_DR3/CFIS.183.254.u.fits -> /localscratch/anahoban.9684165.0/CFIS.183.254/CFIS.183.254.u.fits 
+INFO vcp vos:cfis/tiles_DR3/CFIS.183.254.u.cat -> /localscratch/anahoban.9684165.0/CFIS.183.254/CFIS.183.254.u.cat 
+performing inference on CFIS.183.254
+Fri Aug  6 12:42:00 PDT 2021
+2021-08-06 12:42:09.435730: I tensorflow/stream_executor/platform/default/dso_loader.cc:48] Successfully opened dynamic library libcudart.so.10.1
+2021-08-06 12:42:52.624096: W tensorflow/stream_executor/platform/default/dso_loader.cc:59] Could not load dynamic library 'libcuda.so.1'; dlerror: libcuda.so.1: cannot open shared object file: No such file or directory
+2021-08-06 12:42:52.625345: W tensorflow/stream_executor/cuda/cuda_driver.cc:312] failed call to cuInit: UNKNOWN ERROR (303)
+2021-08-06 12:42:52.625561: I tensorflow/stream_executor/cuda/cuda_diagnostics.cc:156] kernel driver does not appear to be running on this host (cdr582.int.cedar.computecanada.ca): /proc/driver/nvidia/version does not exist
+2021-08-06 12:42:52.626967: I tensorflow/core/platform/cpu_feature_guard.cc:142] This TensorFlow binary is optimized with oneAPI Deep Neural Network Library (oneDNN)to use the following CPU instructions in performance-critical operations:  AVX2 FMA
+To enable them in other operations, rebuild TensorFlow with the appropriate compiler flags.
+2021-08-06 12:42:52.647462: I tensorflow/core/platform/profile_utils/cpu_utils.cc:104] CPU Frequency: 2095085000 Hz
+2021-08-06 12:42:52.648005: I tensorflow/compiler/xla/service/service.cc:168] XLA service 0x7dcccd0 initialized for platform Host (this does not guarantee that XLA will be used). Devices:
+2021-08-06 12:42:52.648171: I tensorflow/compiler/xla/service/service.cc:176]   StreamExecutor device (0): Host, Default Version
