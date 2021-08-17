@@ -1,10 +1,10 @@
 #!/bin/bash
 
 #SBATCH --account=def-sfabbro
-#SBATCH --time=0-2:00
+#SBATCH --time=4-15:00
 
 ## create 100 jobs
-#SBATCH --array=0-99
+#SBATCH --array=0-199
 #SBATCH --mem=8000M
 #SBATCH --output=outputs/%x-%j.out
 
@@ -45,7 +45,7 @@ function infer_one_tile() {
 tile_list=($(<all_files.list))
 
 # set the number of tiles that each SLURM task should do (43 031 tiles in total)
-per_task=431
+per_task=216
 
 # starting and ending indices for this task
 # based on the SLURM task and the number of tiles per task.
